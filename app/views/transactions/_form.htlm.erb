@@ -1,0 +1,26 @@
+<%= form_with(model: transaction, local: true, data: { controller: 'transaction-form' }) do |form| %>
+  <% if transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transaction.errors.count, "error") %> impediram esta transação de ser salva:</h2>
+      <ul>
+        <% transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :transaction_type %>
+    <%= form.select :transaction_type, options_for_select([['Receita', 'income'], ['Despesa', 'expense']], transaction.transaction_type), 
+                    {}, data: { action: 'change->transaction-form#updateCategories' } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category_id %>
+    <%= form.collection_select :category_id, current_user.categories.where(transaction_type: transaction.transaction_type || 'income'), :id, :name, 
+                              { prompt: 'Selecione uma categoria' }, data: { transaction_form_target: 'categorySelect' } %>
+  </div>
+
+  <!-- Outros campos do formulário -->
+<% end %>
