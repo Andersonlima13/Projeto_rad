@@ -1,9 +1,5 @@
-import { Application } from "@hotwired/stimulus"
+import { application } from "controllers/application"
 
-const application = Application.start()
-
-// Configure Stimulus development experience
-application.debug = false
-window.Stimulus   = application
-
-export { application }
+// Importe os controllers que você está usando
+import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+eagerLoadControllersFrom("controllers", application)

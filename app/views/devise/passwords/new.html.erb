@@ -1,0 +1,35 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="text-center">Redefinir senha</h2>
+        </div>
+        
+        <div class="card-body">
+          <%= form_for(resource, as: resource_name, 
+                      url: password_path(resource_name), 
+                      html: { method: :post, class: 'needs-validation' }) do |f| %>
+            
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <div class="mb-3">
+              <%= f.label :email, "E-mail cadastrado", class: 'form-label' %>
+              <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+                               class: 'form-control', required: true %>
+              <div class="form-text">Enviaremos instruções para redefinir sua senha</div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "Enviar instruções", class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+
+          <div class="mt-4 pt-3 border-top text-center">
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
