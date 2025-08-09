@@ -19,13 +19,18 @@
 
     <% if user_signed_in? %>
       <nav class="navbar navbar-dark bg-primary">
-        <div class="container-fluid">
-          <%= link_to "Financeiro", root_path, class: "navbar-brand" %>
-          <%= button_to "Sair", destroy_user_session_path, 
-                       method: :delete, 
-                       class: "btn btn-outline-light" %>
-        </div>
-      </nav>
+  <div class="container-fluid">
+    <%= link_to "Financeiro", 
+                user_signed_in? ? dashboard_path : unauthenticated_root_path, 
+                class: "navbar-brand" %>
+                
+    <% if user_signed_in? %>
+      <%= button_to "Sair", destroy_user_session_path, 
+                   method: :delete, 
+                   class: "btn btn-outline-light" %>
+    <% end %>
+  </div>
+</nav>
     <% end %>
 
     <div class="container mt-4">

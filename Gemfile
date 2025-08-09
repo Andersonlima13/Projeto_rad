@@ -37,6 +37,7 @@ gem "bootstrap", "~> 5.3"
 
 gem "sassc-rails" # Necessário para compilar SCSS
 
+gem "timeliness"
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
 gem "kamal", require: false

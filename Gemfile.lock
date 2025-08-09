@@ -402,6 +402,7 @@ GEM
     thruster (0.1.14-x86_64-darwin)
     thruster (0.1.14-x86_64-linux)
     tilt (2.6.1)
+    timeliness (0.5.3)
     timeout (0.4.3)
     tsort (0.2.0)
     turbo-rails (2.0.16)
@@ -466,6 +467,7 @@ DEPENDENCIES
   sqlite3 (>= 2.1)
   stimulus-rails
   thruster
+  timeliness
   turbo-rails
   tzinfo-data
   web-console

@@ -1,8 +1,16 @@
 <div class="container mt-5">
-  <div class="alert alert-success">
-    Logado como: <strong><%= current_user.email %></strong>
-  </div>
-  
-  <h1>Painel Financeiro</h1>
-  <!-- Conteúdo do dashboard aqui -->
+  <% if user_signed_in? %>
+    <div class="alert alert-success">
+      Logado como: <strong><%= current_user.email %></strong>
+      <%= link_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-outline-danger float-end" %>
+    </div>
+    
+    <h1>Painel Financeiro</h1>
+    
+    <!-- Seu conteúdo aqui -->
+  <% else %>
+    <div class="alert alert-warning">
+      Você não está logado. <%= link_to "Fazer login", new_user_session_path %>
+    </div>
+  <% end %>
 </div>

@@ -1,21 +1,21 @@
 Rails.application.routes.draw do
-  get "dashboard/index"
-  get "home/index"
-
   devise_for :users, controllers: {
     registrations: "users/registrations",
-    sessions: "users/sessions"  # Adicione esta linha
+    sessions: "users/sessions"
   }
 
-   authenticated :user do
-    root "dashboard#index", as: :dashboard
+  # Defina a rota do dashboard explicitamente
+  get "dashboard", to: "dashboard#index", as: :dashboard
+
+  # Rotas root condicionais
+  authenticated :user do
+    root to: "dashboard#index", as: :authenticated_root
   end
+
   unauthenticated do
-    root "home#index"
+    root to: "home#index", as: :unauthenticated_root
   end
 
-
-
+  get "home/index"
   get "up" => "rails/health#show", as: :rails_health_check
-  root to: "home#index"
 end
