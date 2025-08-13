@@ -1,9 +1,9 @@
 ### transaction_form_controller
 
-File: `app/javascript/controllers/transaction_form_controller.js`
+Arquivo: `app/javascript/controllers/transaction_form_controller.js`
 
 - Targets: `categorySelect`
-- Action: `updateCategories(event)` fetches category options for a selected transaction type and expects a Turbo Stream response to update the categories select.
+- Ação: `updateCategories(event)` busca opções de categorias para o tipo de transação selecionado e espera uma resposta Turbo Stream para atualizar o select de categorias.
 
 ```javascript
 export default class extends Controller {
@@ -20,7 +20,7 @@ export default class extends Controller {
 }
 ```
 
-Usage example:
+Exemplo de uso:
 ```html
 <div data-controller="transaction-form">
   <select name="transaction[transaction_type]"
@@ -30,13 +30,13 @@ Usage example:
   </select>
 
   <select name="transaction[category_id]" data-transaction-form-target="categorySelect">
-    <!-- options will be updated via Turbo Stream -->
+    <!-- opções serão atualizadas via Turbo Stream -->
   </select>
 </div>
 ```
 
-Notes:
-- The controller calls `GET /categories/options?transaction_type=...` and expects a Turbo Stream that updates the `categorySelect` target. This endpoint and corresponding Turbo Stream template are not present in `config/routes.rb` or `CategoriesController`. Add a route and action to support this behavior, e.g.:
+Observações:
+- O controller chama `GET /categories/options?transaction_type=...` e espera um Turbo Stream que atualize o target `categorySelect`. Esse endpoint e o template Turbo Stream correspondente não estão presentes em `config/routes.rb` nem em `CategoriesController`. Adicione a rota e a ação para dar suporte a esse comportamento, por exemplo:
 ```ruby
 # config/routes.rb
 resources :categories do

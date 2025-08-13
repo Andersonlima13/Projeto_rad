@@ -1,6 +1,6 @@
 ### hello_controller
 
-File: `app/javascript/controllers/hello_controller.js`
+Arquivo: `app/javascript/controllers/hello_controller.js`
 
 ```javascript
 export default class extends Controller {
@@ -10,8 +10,8 @@ export default class extends Controller {
 }
 ```
 
-Usage:
+Uso:
 ```html
 <div data-controller="hello"></div>
 ```
-On connect, the div's text content becomes "Hello World!".
+Ao conectar, o texto do elemento se torna "Hello World!".

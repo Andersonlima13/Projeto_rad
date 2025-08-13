@@ -1,8 +1,8 @@
 ### DashboardController
 
-- Inherits: `ApplicationController`
-- Actions: `index`
-- Auth: required
-- Route: `GET /dashboard` and authenticated root (`/` when signed in)
+- Herda: `ApplicationController`
+- Ações: `index`
+- Auth: obrigatória
+- Rota: `GET /dashboard` e root autenticado (`/` quando logado)
 
-Set up instance variables within `index` as needed to render dashboard data.
+Defina variáveis de instância dentro de `index` conforme necessário para renderizar os dados do dashboard.

@@ -1,6 +1,6 @@
 ### ApplicationJob
 
-Base class for background jobs using ActiveJob.
+Classe base para jobs em segundo plano usando ActiveJob.
 
 ```ruby
 class ApplicationJob < ActiveJob::Base
@@ -9,19 +9,19 @@ class ApplicationJob < ActiveJob::Base
 end
 ```
 
-- Use adapters like Sidekiq in production (configure in `config/application.rb` or environment files).
-- Create jobs inheriting from `ApplicationJob` and enqueue with `perform_later`.
+- Use adaptadores como Sidekiq em produção (configure em `config/application.rb` ou nos arquivos de ambiente).
+- Crie jobs herdando de `ApplicationJob` e coloque na fila com `perform_later`.
 
-Example:
+Exemplo:
 ```ruby
 class RecalculateTotalsJob < ApplicationJob
   queue_as :default
 
   def perform(user_id)
-    # do work
+    # processamento
   end
 end
 
-# Enqueue
+# Enfileirar
 RecalculateTotalsJob.perform_later(current_user.id)
 ```

@@ -1,11 +1,11 @@
-### User model
+### Model User
 
-- Table: `users`
+- Tabela: `users`
 - Auth: Devise (`:database_authenticatable, :registerable, :recoverable, :rememberable, :validatable`)
-- Associations:
+- Associações:
   - `has_many :categories, dependent: :destroy`
   - `has_many :transactions, through: :categories`
-- Attributes (from schema):
+- Atributos (do schema):
   - `id: integer`
   - `email: string`
   - `encrypted_password: string`
@@ -15,12 +15,12 @@
   - `name: string`
   - `created_at: datetime`
   - `updated_at: datetime`
-- Validations:
-  - `name` presence, minimum length 2
-  - `email` presence, uniqueness (case-insensitive), RFC-compliant format
-  - `password` minimum length 6 (allow_nil: true on updates)
+- Validações:
+  - `name` presença, mínimo 2 caracteres
+  - `email` presença, unicidade (case-insensitive), formato RFC válido
+  - `password` mínimo 6 caracteres (allow_nil: true em updates)
 
-Example (Rails console):
+Exemplo (Rails console):
 ```ruby
 user = User.create!(name: "Sam", email: "sam@example.com", password: "secret123")
 user.categories.create!(name: "Utilities")

@@ -1,6 +1,6 @@
-### Authentication
+### Autenticação
 
-This application uses Devise for user authentication and session management. All controllers inherit from `ApplicationController`, which enforces authentication by default:
+Esta aplicação usa Devise para autenticação de usuários e gerenciamento de sessão. Todos os controllers herdam de `ApplicationController`, que impõe autenticação por padrão:
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -18,20 +18,20 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-- After sign in → users are redirected to the dashboard
-- After sign out → users are redirected to the sign-in page
+- Após o login → usuários são redirecionados para o dashboard
+- Após o logout → usuários são redirecionados para a página de login
 
-To make specific actions public, opt out explicitly:
+Para tornar ações específicas públicas, desative explicitamente:
 ```ruby
 class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: :index
 end
 ```
 
-Devise controllers customized:
-- Sessions: sets flash messages and redirects to dashboard on success
-- Registrations: permits `name`, `email`, `password`, and related fields on sign up and account update
+Controllers do Devise customizados:
+- Sessions: define mensagens flash e redireciona ao dashboard em sucesso
+- Registrations: permite `name`, `email`, `password` e campos relacionados no cadastro e atualização de conta
 
-Common routes (handled by Devise):
+Rotas comuns (gerenciadas pelo Devise):
 - Sessions: `/users/sign_in` (GET, POST), `/users/sign_out` (DELETE)
 - Registrations: `/users/sign_up` (GET, POST), `/users` (PUT/PATCH/DELETE)

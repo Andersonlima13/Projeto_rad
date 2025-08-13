@@ -1,37 +1,37 @@
 ### CategoriesController
 
-- Inherits: `ApplicationController`
-- Filters: `before_action :set_category` for `edit, update, destroy`
-- Auth: required
+- Herda: `ApplicationController`
+- Filtros: `before_action :set_category` para `edit, update, destroy`
+- Auth: obrigatória
 
-#### Actions
+#### Ações
 - `index`
-  - Assigns `@categories = current_user.categories.order(:name)`
-  - Assigns `@category = current_user.categories.new` (typically for inline form usage)
+  - Atribui `@categories = current_user.categories.order(:name)`
+  - Atribui `@category = current_user.categories.new` (comum para uso em formulário inline)
 - `create`
-  - Builds from `current_user.categories.new(category_params)`
-  - On success: responds to Turbo Stream and HTML redirect to `categories_path`
-  - On failure: Turbo Stream renders `form_update`; HTML renders `index`
+  - Cria a partir de `current_user.categories.new(category_params)`
+  - Sucesso: responde com Turbo Stream e redireciona em HTML para `categories_path`
+  - Falha: Turbo Stream renderiza `form_update`; HTML renderiza `index`
 - `update`
-  - Updates a user-owned category via `@category.update(category_params)`
-  - Redirects to `categories_path` on success; renders `edit` on failure
+  - Atualiza uma categoria do usuário via `@category.update(category_params)`
+  - Redireciona para `categories_path` em sucesso; renderiza `edit` em falha
 - `destroy`
-  - Destroys a user-owned category
-  - Responds with Turbo Stream removal or HTML redirect
+  - Remove uma categoria do usuário
+  - Responde com remoção via Turbo Stream ou redirecionamento HTML
 
-#### Strong parameters
+#### Parâmetros fortes
 ```ruby
 def category_params
   params.require(:category).permit(:name, :position)
 end
 ```
-Note: `position` is permitted but not present in `db/schema.rb`.
+Observação: `position` está permitido, mas não consta em `db/schema.rb`.
 
-#### Private helpers
+#### Métodos privados
 - `set_category` → `@category = current_user.categories.find(params[:id])`
 
-#### Usage examples
-Create (HTML form snippet):
+#### Exemplos de uso
+Criar (trecho de formulário HTML):
 ```erb
 <%= form_with model: @category, url: categories_path do |f| %>
   <%= f.label :name %>
@@ -40,4 +40,4 @@ Create (HTML form snippet):
 <% end %>
 ```
 
-Create (Turbo): ensure Turbo Stream templates exist (e.g., `create.turbo_stream.erb`) to handle stream responses.
+Criar (Turbo): garanta que existam templates Turbo Stream (por exemplo, `create.turbo_stream.erb`) para lidar com as respostas via stream.

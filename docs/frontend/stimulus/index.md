@@ -1,6 +1,6 @@
-### Stimulus overview
+### Visão geral do Stimulus
 
-Stimulus is initialized via Importmap in `app/javascript/application.js`:
+O Stimulus é inicializado via Importmap em `app/javascript/application.js`:
 
 ```javascript
 import "@hotwired/turbo-rails"
@@ -8,7 +8,7 @@ import "controllers"
 import "bootstrap"
 ```
 
-Controllers are registered by `app/javascript/controllers/application.js` and `app/javascript/controllers/index.js`:
+Os controllers são registrados por `app/javascript/controllers/application.js` e `app/javascript/controllers/index.js`:
 
 ```javascript
 // app/javascript/controllers/application.js
@@ -24,16 +24,16 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
 ```
 
-Usage pattern:
-- Attach a controller to an element with `data-controller`.
-- Bind actions with `data-action`.
-- Define targets with `static targets = ["name"]` and reference via `this.nameTarget`.
+Padrão de uso:
+- Anexe um controller a um elemento com `data-controller`.
+- Faça o binding de ações com `data-action`.
+- Defina targets com `static targets = ["name"]` e acesse via `this.nameTarget`.
 
-Add a new controller example:
+Exemplo para adicionar um novo controller:
 ```bash
 bin/rails generate stimulus counter
 ```
-Then use it:
+Depois, use-o:
 ```html
 <div data-controller="counter">
   <button data-action="click->counter#increment">+</button>

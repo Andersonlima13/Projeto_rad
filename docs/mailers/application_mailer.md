@@ -1,6 +1,6 @@
 ### ApplicationMailer
 
-Base class for mailers.
+Classe base para mailers.
 
 ```ruby
 class ApplicationMailer < ActionMailer::Base
@@ -9,10 +9,10 @@ class ApplicationMailer < ActionMailer::Base
 end
 ```
 
-- Set a real default sender address in production, e.g., `no-reply@yourdomain.com`.
-- Create mailers inheriting from `ApplicationMailer` and views under `app/views/...`.
+- Defina um remetente real em produção, por exemplo, `no-reply@seudominio.com`.
+- Crie mailers herdando de `ApplicationMailer` e views em `app/views/...`.
 
-Example:
+Exemplo:
 ```ruby
 class UserMailer < ApplicationMailer
   def welcome(user)

@@ -1,6 +1,6 @@
 ### ApplicationController
 
-Enforces authentication and defines post-auth redirections.
+Aplica autenticação e define os redirecionamentos pós-autenticação.
 
 ```ruby
 class ApplicationController < ActionController::Base
@@ -18,5 +18,5 @@ class ApplicationController < ActionController::Base
 end
 ```
 
-- All controllers inherit this behavior by default.
-- Skip authentication on specific actions with `skip_before_action :authenticate_user!`.
+- Todos os controllers herdam esse comportamento por padrão.
+- Para tornar ações públicas, use `skip_before_action :authenticate_user!` quando necessário.

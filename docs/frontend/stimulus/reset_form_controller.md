@@ -1,6 +1,6 @@
 ### reset_form_controller
 
-File: `app/javascript/controllers/reset_form_controller.js`
+Arquivo: `app/javascript/controllers/reset_form_controller.js`
 
 ```javascript
 export default class extends Controller {
@@ -10,17 +10,17 @@ export default class extends Controller {
 }
 ```
 
-Usage options:
-- Reset a form on a button click:
+Opções de uso:
+- Resetar um formulário ao clicar no botão:
 ```html
 <form data-controller="reset-form">
-  <!-- fields -->
-  <button type="button" data-action="click->reset-form#reset">Clear</button>
+  <!-- campos -->
+  <button type="button" data-action="click->reset-form#reset">Limpar</button>
 </form>
 ```
-- Reset after a Turbo form submission succeeds:
+- Resetar após o envio do formulário Turbo ser concluído com sucesso:
 ```html
 <form data-controller="reset-form" data-action="turbo:submit-end->reset-form#reset">
-  <!-- fields -->
+  <!-- campos -->
 </form>
 ```

@@ -1,8 +1,8 @@
 ### HomeController
 
-- Inherits: `ApplicationController`
-- Actions: `index`
-- Auth: required by inheritance. If a public homepage is desired for unauthenticated users, add:
+- Herda: `ApplicationController`
+- Ações: `index`
+- Auth: obrigatória por herança. Se desejar uma página inicial pública para usuários não autenticados, adicione:
 ```ruby
 class HomeController < ApplicationController
   skip_before_action :authenticate_user!, only: :index

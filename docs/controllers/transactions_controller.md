@@ -1,19 +1,19 @@
 ### TransactionsController
 
-- Inherits: `ApplicationController`
-- Filters: `before_action :authenticate_user!`; `before_action :set_transaction` for `show, edit, update, destroy`
-- Auth: required
-- Routing: Not currently exposed in `config/routes.rb`. Add `resources :transactions` to enable.
+- Herda: `ApplicationController`
+- Filtros: `before_action :authenticate_user!`; `before_action :set_transaction` para `show, edit, update, destroy`
+- Auth: obrigatória
+- Rotas: não está exposto em `config/routes.rb`. Adicione `resources :transactions` para habilitar.
 
-#### Actions
-- `index` → paginated list: `current_user.transactions.order(date: :desc).page(params[:page])`
-- `new` → initializes `@transaction`
-- `create` → builds from `current_user.transactions.new(transaction_params)`
-- `edit` → edits `@transaction`
-- `update` → updates and redirects on success; re-renders on failure
-- `destroy` → deletes and redirects
+#### Ações
+- `index` → lista paginada: `current_user.transactions.order(date: :desc).page(params[:page])`
+- `new` → inicializa `@transaction`
+- `create` → cria a partir de `current_user.transactions.new(transaction_params)`
+- `edit` → edita `@transaction`
+- `update` → atualiza e redireciona em sucesso; renderiza novamente em falha
+- `destroy` → exclui e redireciona
 
-#### Strong parameters
+#### Parâmetros fortes
 ```ruby
 def transaction_params
   params.require(:transaction).permit(
@@ -22,11 +22,11 @@ def transaction_params
 end
 ```
 
-#### Constraints and validations
-See [Transaction model](../models/transaction.md) for validation rules and scope methods.
+#### Restrições e validações
+Veja o [model Transaction](../models/transaction.md) para regras de validação e escopos.
 
-#### Example usage (after adding routes)
-Create via form:
+#### Exemplo de uso (após adicionar as rotas)
+Criar via formulário:
 ```erb
 <%= form_with model: @transaction, url: transactions_path do |f| %>
   <%= f.number_field :amount, step: "0.01" %>
