@@ -1,24 +1,16 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+See the full project documentation in `docs/`.
 
-Things you may want to cover:
+- Start here: [docs/index.md](docs/index.md)
+- HTTP endpoints: [docs/endpoints.md](docs/endpoints.md)
+- Controllers: `docs/controllers/`
+- Models: `docs/models/`
+- Frontend (Stimulus): `docs/frontend/stimulus/`
+- Authentication: [docs/authentication.md](docs/authentication.md)
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Setup (quick):
+- Ruby: see `.ruby-version`
+- Install: `bundle install`
+- DB: `bin/rails db:setup`
+- Run: `bin/rails s`
