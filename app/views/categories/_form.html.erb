@@ -1,0 +1,14 @@
+<%= form_with(model: category, 
+              data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" }) do |form| %>
+  <div class="row g-3 align-items-center mb-4">
+    <div class="col-auto">
+      <%= form.label :name, "Nova Categoria", class: "col-form-label" %>
+    </div>
+    <div class="col-auto">
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+    <div class="col-auto">
+      <%= form.submit "Salvar", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

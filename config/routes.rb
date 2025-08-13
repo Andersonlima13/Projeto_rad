@@ -7,6 +7,13 @@ Rails.application.routes.draw do
   # Defina a rota do dashboard explicitamente
   get "dashboard", to: "dashboard#index", as: :dashboard
 
+  # Rotas para categorias (dentro do bloco draw)
+  resources :categories, except: [ :show ] do
+    collection do
+      patch :sort # Para reordenação (opcional)
+    end
+  end
+
   # Rotas root condicionais
   authenticated :user do
     root to: "dashboard#index", as: :authenticated_root

@@ -1,0 +1,11 @@
+<div class="container mt-5">
+  <h1 class="mb-4">Minhas Categorias</h1>
+
+  <%= turbo_frame_tag "category_form" do %>
+    <%= render "form", category: @category %>
+  <% end %>
+
+  <%= turbo_frame_tag "categories" do %>
+    <%= render @categories %>
+  <% end %>
+</div>
