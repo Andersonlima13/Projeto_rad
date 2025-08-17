@@ -19,3 +19,7 @@ class Category < ActiveRecord::Base
     end
   end
 end
+
+class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+end

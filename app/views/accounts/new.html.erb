@@ -1,0 +1,15 @@
+<!-- app/views/accounts/new.html.erb -->
+<div class="container">
+  <h1>Nova Conta</h1>
+  <%= render 'form', account: @account %>
+  <%= link_to 'Voltar', accounts_path, class: "btn btn-link" %>
+</div>
+<%= render template: "layouts/modal" do %>
+  <div class="modal-header">
+    <h5 class="modal-title">Nova Conta</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <%= render 'form', account: @account %>
+  </div>
+<% end %>

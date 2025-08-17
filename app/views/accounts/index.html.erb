@@ -1,0 +1,75 @@
+<!-- app/views/accounts/index.html.erb -->
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Bem vindo, <%= current_user.name %></h1>
+    <%= link_to "sair", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Gastos atuais</h2>
+      <div class="card mb-4">
+        <div class="card-body">
+          <!-- Aqui vai um gráfico ou resumo de gastos -->
+          <p class="text-muted">Resumo de gastos por conta virá aqui</p>
+        </div>
+      </div>
+
+      <h2>Gastos recentes</h2>
+      <div class="card">
+        <div class="card-body">
+          <% if @recent_transactions.any? %>
+            <ul class="list-group">
+              <% @recent_transactions.each do |transaction| %>
+                <li class="list-group-item">
+                  <%= transaction.description %> - <%= number_to_currency(transaction.amount) %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted">Nenhuma transação recente</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Contas</h2>
+        <%= link_to "Nova Conta", new_account_path, class: "btn btn-primary" %>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <% if @accounts.any? %>
+            <ul class="list-group">
+              <% @accounts.each do |account| %>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <%= account.name %>
+                  <div>
+                    <%= link_to "Editar", edit_account_path(account), class: "btn btn-sm btn-outline-secondary" %>
+                    <%= link_to "Excluir", account_path(account), method: :delete, data: { confirm: 'Tem certeza?' }, class: "btn btn-sm btn-outline-danger" %>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted">Nenhuma conta cadastrada</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-md-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Contas</h2>
+    <%= link_to "Nova Conta", new_account_path, class: "btn btn-primary", data: { turbo_frame: "modal" } %>
+  </div>
+
+  <turbo-frame id="accounts">
+    <%= render @accounts %>
+  </turbo-frame>
+</div>

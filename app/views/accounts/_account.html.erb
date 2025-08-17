@@ -1,0 +1,8 @@
+<!-- app/views/accounts/_account.html.erb -->
+<li class="list-group-item d-flex justify-content-between align-items-center">
+  <%= account.name %>
+  <div>
+    <%= link_to "Editar", edit_account_path(account), class: "btn btn-sm btn-outline-secondary", data: { turbo_frame: "modal" } %>
+    <%= link_to "Excluir", account_path(account), method: :delete, data: { confirm: 'Tem certeza?', turbo_method: :delete }, class: "btn btn-sm btn-outline-danger" %>
+  </div>
+</li>

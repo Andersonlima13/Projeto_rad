@@ -4,10 +4,17 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
-  # Defina a rota do dashboard explicitamente
-  get "dashboard", to: "dashboard#index", as: :dashboard
+  # Rotas para accounts (com transactions aninhadas)
+  resources :accounts, except: [ :show ] do
+    collection do
+      patch :sort # Para reordenação (opcional)
+    end
 
-  # Rotas para categorias (dentro do bloco draw)
+    # Rotas para transactions aninhadas em accounts
+    resources :transactions
+  end
+
+  # Rotas para categorias
   resources :categories, except: [ :show ] do
     collection do
       patch :sort # Para reordenação (opcional)
@@ -16,13 +23,14 @@ Rails.application.routes.draw do
 
   # Rotas root condicionais
   authenticated :user do
-    root to: "dashboard#index", as: :authenticated_root
+    root to: "accounts#index", as: :authenticated_root
   end
 
   unauthenticated do
     root to: "home#index", as: :unauthenticated_root
   end
 
+  # Rotas auxiliares
   get "home/index"
   get "up" => "rails/health#show", as: :rails_health_check
 end

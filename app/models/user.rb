@@ -1,9 +1,11 @@
-class User < ActiveRecord::Base
+# app/models/user.rb
+class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
   has_many :categories, dependent: :destroy
-  has_many :transactions, through: :categories
+  has_many :accounts, dependent: :destroy
+  has_many :transactions, through: :accounts
 
   validates :name, presence: true, length: { minimum: 2 }
   validates :email,

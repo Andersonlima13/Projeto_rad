@@ -1,0 +1,21 @@
+<!-- app/views/layouts/modal.html.erb -->
+<turbo-frame id="modal">
+  <div class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= yield %>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('turbo:load', () => {
+      const modal = new bootstrap.Modal(document.querySelector('.modal'))
+      modal.show()
+      
+      document.querySelector('.modal').addEventListener('hidden.bs.modal', () => {
+        Turbo.visit(window.location.href)
+      })
+    })
+  </script>
+</turbo-frame>

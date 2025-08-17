@@ -1,20 +1,22 @@
 class TransactionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_account, except: [ :index ] # Carrega a conta para ações específicas
   before_action :set_transaction, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @transactions = current_user.transactions.order(date: :desc).page(params[:page])
+    # Mostra transações de todas as contas do usuário
+    @transactions = current_user.transactions.includes(:account).order(date: :desc).page(params[:page])
   end
 
   def new
-    @transaction = current_user.transactions.new
+    @transaction = @account.transactions.new
   end
 
   def create
-    @transaction = current_user.transactions.new(transaction_params)
+    @transaction = @account.transactions.new(transaction_params)
 
     if @transaction.save
-      redirect_to transactions_path, notice: "Transação criada com sucesso."
+      redirect_to account_transactions_path(@account), notice: "Transação criada com sucesso."
     else
       render :new
     end
@@ -25,7 +27,7 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update(transaction_params)
-      redirect_to transactions_path, notice: "Transação atualizada com sucesso."
+      redirect_to account_transactions_path(@account), notice: "Transação atualizada com sucesso."
     else
       render :edit
     end
@@ -33,10 +35,19 @@ class TransactionsController < ApplicationController
 
   def destroy
     @transaction.destroy
-    redirect_to transactions_path, notice: "Transação removida com sucesso."
+    redirect_to account_transactions_path(@account), notice: "Transação removida com sucesso."
   end
 
   private
+
+  def set_account
+    # Para ações específicas (new, create, etc.), pega a conta dos params ou usa a padrão
+    @account = if params[:account_id].present?
+                 current_user.accounts.find(params[:account_id])
+    else
+                 @transaction&.account || current_user.accounts.first
+    end
+  end
 
   def set_transaction
     @transaction = current_user.transactions.find(params[:id])
