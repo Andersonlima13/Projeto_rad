@@ -1,8 +1,40 @@
 <!-- app/views/accounts/_account.html.erb -->
-<li class="list-group-item d-flex justify-content-between align-items-center">
-  <%= account.name %>
-  <div>
-    <%= link_to "Editar", edit_account_path(account), class: "btn btn-sm btn-outline-secondary", data: { turbo_frame: "modal" } %>
-    <%= link_to "Excluir", account_path(account), method: :delete, data: { confirm: 'Tem certeza?', turbo_method: :delete }, class: "btn btn-sm btn-outline-danger" %>
+<div class="col-md-6 col-lg-4 mb-4">
+  <div class="card account-card h-100">
+    <div class="card-header bg-primary text-white">
+      <h6 class="card-title mb-0"><i class="fas fa-wallet me-2"></i><%= account.name %></h6>
+    </div>
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Limite:</span>
+        <span class="fw-bold <%= account.limit > 0 ? 'text-success' : 'text-danger' %>">
+          <%= number_to_currency(account.limit) %>
+        </span>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Criada em:</span>
+        <span class="text-muted small"><%= l(account.created_at, format: :short) %></span>
+      </div>
+      
+      <div class="d-grid gap-2">
+        <%= link_to "Ver Conta", account_path(account), class: "btn btn-outline-primary btn-sm" %>
+        <%= link_to "Editar", edit_account_path(account), class: "btn btn-outline-secondary btn-sm" %>
+      </div>
+    </div>
+    <div class="card-footer bg-light">
+      <div class="d-flex justify-content-between">
+        <small class="text-muted">ID: #<%= account.id %></small>
+        <%= button_to "Excluir", account_path(account), 
+                      method: :delete,
+                      form: { 
+                        data: { 
+                          turbo_confirm: 'Tem certeza que deseja excluir esta conta?',
+                          turbo: true 
+                        } 
+                      },
+                      class: "btn btn-outline-danger btn-sm" %>
+      </div>
+    </div>
   </div>
-</li>
+</div>

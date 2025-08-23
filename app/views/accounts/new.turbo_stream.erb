@@ -1,0 +1,38 @@
+<%= turbo_stream.append "body" do %>
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show" id="accountModal" tabindex="-1" aria-hidden="false" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nova Conta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= render "form", account: @account %>
+        </div>
+        <div class="modal-footer">
+          <%= link_to "Cancelar", accounts_path, 
+                      class: "btn btn-secondary", 
+                      data: { bs_dismiss: "modal" } %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= turbo_stream.append "body" do %>
+  <script>
+    // Força o modal a aparecer mesmo sem Bootstrap JS
+    document.getElementById('accountModal').style.display = 'block';
+    document.getElementById('accountModal').classList.add('show');
+    
+    // Adiciona evento para fechar
+    document.getElementById('accountModal').addEventListener('click', function(e) {
+      if (e.target === this || e.target.classList.contains('btn-close') || 
+          e.target.dataset.bsDismiss === 'modal') {
+        this.remove();
+        document.querySelector('.modal-backdrop').remove();
+      }
+    });
+  </script>
+<% end %>

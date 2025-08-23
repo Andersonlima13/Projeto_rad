@@ -1,15 +1,18 @@
 <!-- app/views/accounts/edit.html.erb -->
-<div class="container">
-  <h1>Editar Conta</h1>
-  <%= render 'form', account: @account %>
-  <%= link_to 'Voltar', accounts_path, class: "btn btn-link" %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title mb-0">Editar Conta</h2>
+        </div>
+        <div class="card-body">
+          <%= render "form", account: @account %>
+        </div>
+        <div class="card-footer">
+          <%= link_to "Voltar para Contas", accounts_path, class: "btn btn-secondary" %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<%= render template: "layouts/modal" do %>
-  <div class="modal-header">
-    <h5 class="modal-title">Editar Conta</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <%= render 'form', account: @account %>
-  </div>
-<% end %>

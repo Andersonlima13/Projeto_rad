@@ -1,18 +1,20 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// app/javascript/application.js
 import "@hotwired/turbo-rails"
-import "controllers"
-import "bootstrap" // Importa o Bootstrap para uso no projeto
+import { Modal, Toast } from "bootstrap" // Importe apenas o necessário
+import "./controllers"
 
-// Importe os componentes JS do Bootstrap que você precisa
-import { Tooltip, Popover } from 'bootstrap';
-
-// Inicialize os componentes
-document.addEventListener('DOMContentLoaded', () => {
-  [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    .forEach(tooltipNode => new Tooltip(tooltipNode));
+// Inicialização global de componentes Bootstrap
+document.addEventListener("turbo:load", () => {
+  // Inicializa modais
+  document.querySelectorAll('.modal').forEach(modalEl => {
+    const modal = new Modal(modalEl)
+    modal.show()
+    
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      modalEl.remove()
+      document.querySelector('.modal-backdrop')?.remove()
+    })
+  })
   
-  [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    .forEach(popoverNode => new Popover(popoverNode));
-});
-
-
+  // Outros componentes podem ser adicionados aqui
+})

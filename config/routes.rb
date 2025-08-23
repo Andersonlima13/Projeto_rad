@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   }
 
   # Rotas para accounts (com transactions aninhadas)
-  resources :accounts, except: [ :show ] do
+  resources :accounts do  # REMOVA except: [:show]
     collection do
       patch :sort # Para reordenação (opcional)
     end
