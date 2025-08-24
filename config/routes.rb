@@ -10,6 +10,14 @@ Rails.application.routes.draw do
       patch :sort # Para reordenação (opcional)
     end
 
+    resources :accounts do
+  resources :transactions
+end
+
+get "transactions", to: "transactions#index", as: :all_transactions
+
+
+
     # Rotas para transactions aninhadas em accounts
     resources :transactions
   end

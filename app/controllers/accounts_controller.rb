@@ -84,6 +84,19 @@ end
 
 
 
+ def current_balance
+    limit - transactions.expenses.sum(:amount) + transactions.incomes.sum(:amount)
+ end
+
+  def available_limit
+    limit - transactions.expenses.sum(:amount)
+  end
+
+
+
+
+
+
 
   private
 

@@ -2,7 +2,6 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <!-- Breadcrumb -->
       <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><%= link_to "Contas", accounts_path %></li>
@@ -10,7 +9,6 @@
         </ol>
       </nav>
 
-      <!-- Card de Detalhes da Conta -->
       <div class="card">
         <div class="card-header bg-primary text-white">
           <div class="d-flex justify-content-between align-items-center">
@@ -51,36 +49,49 @@
           <div class="row mt-4">
             <div class="col-12">
               <h5 class="border-bottom pb-2">Estatísticas</h5>
-              <div class="row text-center">
-                <div class="col-md-4 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h6 class="text-muted">Total de Transações</h6>
-                      <h4 class="text-primary"><%= @account.transactions.count %></h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h6 class="text-muted">Receitas</h6>
-                      <h4 class="text-success">
-                      </h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <div class="card">
-                    <div class="card-body">
-                      <h6 class="text-muted">Despesas</h6>
-                      <h4 class="text-danger">
-                      </h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
+
+<div class="row text-center">
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="text-muted">Total de Transações</h6>
+        <h4 class="text-primary"><%= @account.transactions_count %></h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="text-muted">Receitas</h6>
+        <h4 class="text-success"><%= number_to_currency(@account.total_income) %></h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="text-muted">Despesas</h6>
+        <h4 class="text-danger"><%= number_to_currency(@account.total_expenses) %></h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+           
+
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card bg-info text-white">
+      <div class="card-body text-center">
+        <h5 class="card-title">Saldo Disponível</h5>
+        <h2 class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+          <%= number_to_currency(@account.current_balance) %>
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
 
           <!-- Ações Rápidas -->
           <div class="row mt-4">
@@ -89,8 +100,13 @@
               <div class="d-grid gap-2 d-md-flex">
                 <%= link_to "Nova Transação", new_account_transaction_path(@account), 
                             class: "btn btn-primary me-md-2" %>
+               <%= link_to "Ver Transações", account_transactions_path(@account), class: "btn btn-info me-2" %>
+
                 <%= link_to "Editar Conta", edit_account_path(@account), 
                             class: "btn btn-outline-secondary me-md-2" %>
+
+
+                            
                 <%= button_to "Excluir Conta", account_path(@account), 
                              method: :delete,
                              data: { turbo_confirm: 'Tem certeza que deseja excluir esta conta?' },

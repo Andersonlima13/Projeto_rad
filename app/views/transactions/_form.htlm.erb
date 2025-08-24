@@ -1,7 +1,8 @@
-<%= form_with(model: transaction, local: true, data: { controller: 'transaction-form' }) do |form| %>
+<!-- app/views/transactions/_form.html.erb -->
+<%= form_with(model: [@account, transaction], local: true) do |form| %>
   <% if transaction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(transaction.errors.count, "error") %> impediram esta transação de ser salva:</h2>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(transaction.errors.count, "erro") %> impediram esta transação de ser salva:</h4>
       <ul>
         <% transaction.errors.full_messages.each do |message| %>
           <li><%= message %></li>
@@ -10,17 +11,51 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :transaction_type %>
-    <%= form.select :transaction_type, options_for_select([['Receita', 'income'], ['Despesa', 'expense']], transaction.transaction_type), 
-                    {}, data: { action: 'change->transaction-form#updateCategories' } %>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :transaction_type, "Tipo de Transação" %>
+        <%= form.select :transaction_type, 
+                        options_for_select([['Receita', 'income'], ['Despesa', 'expense']], transaction.transaction_type),
+                        {}, class: "form-control" %>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :amount, "Valor" %>
+        <%= form.number_field :amount, step: 0.01, class: "form-control" %>
+      </div>
+    </div>
   </div>
 
-  <div class="field">
-    <%= form.label :category_id %>
-    <%= form.collection_select :category_id, current_user.categories.where(transaction_type: transaction.transaction_type || 'income'), :id, :name, 
-                              { prompt: 'Selecione uma categoria' }, data: { transaction_form_target: 'categorySelect' } %>
+  <div class="form-group mb-3">
+    <%= form.label :description, "Descrição" %>
+    <%= form.text_field :description, class: "form-control" %>
   </div>
 
-  <!-- Outros campos do formulário -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :date, "Data" %>
+        <%= form.date_field :date, class: "form-control" %>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :category_id, "Categoria (Opcional)" %>
+        <%= form.collection_select :category_id, 
+                                  current_user.categories.order(:name), 
+                                  :id, :name, 
+                                  { include_blank: "Selecione uma categoria" }, 
+                                  class: "form-control" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.submit "Salvar Transação", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", account_transactions_path(@account), class: "btn btn-secondary" %>
+  </div>
 <% end %>

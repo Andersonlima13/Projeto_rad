@@ -1,24 +1,38 @@
+# app/controllers/transactions_controller.rb
 class TransactionsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_account, except: [ :index ] # Carrega a conta para ações específicas
+  before_action :set_account
   before_action :set_transaction, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    # Mostra transações de todas as contas do usuário
-    @transactions = current_user.transactions.includes(:account).order(date: :desc).page(params[:page])
+    if @account
+      @transactions = @account.transactions.includes(:category).order(date: :desc, created_at: :desc)
+    else
+      # Fallback para todas as transações do usuário
+      @transactions = current_user.transactions.includes(:account, :category).order(date: :desc, created_at: :desc)
+      flash.now[:alert] = "Conta não especificada. Mostrando todas as transações."
+    end
+  end
+
+  def show
   end
 
   def new
-    @transaction = @account.transactions.new
+    @transaction = @account.transactions.new(
+      date: Date.current,
+      transaction_type: params[:type] || "expense"
+    )
   end
 
   def create
     @transaction = @account.transactions.new(transaction_params)
 
-    if @transaction.save
-      redirect_to account_transactions_path(@account), notice: "Transação criada com sucesso."
-    else
-      render :new
+    respond_to do |format|
+      if @transaction.save
+        format.html { redirect_to account_path(@account), notice: "Transação criada com sucesso." }
+        format.turbo_stream
+      else
+        format.html { render :new, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -27,9 +41,9 @@ class TransactionsController < ApplicationController
 
   def update
     if @transaction.update(transaction_params)
-      redirect_to account_transactions_path(@account), notice: "Transação atualizada com sucesso."
+      redirect_to account_transaction_path(@account, @transaction), notice: "Transação atualizada com sucesso."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -40,20 +54,33 @@ class TransactionsController < ApplicationController
 
   private
 
-  def set_account
-    # Para ações específicas (new, create, etc.), pega a conta dos params ou usa a padrão
-    @account = if params[:account_id].present?
-                 current_user.accounts.find(params[:account_id])
+
+def set_account
+  if params[:account_id].present?
+    begin
+      @account = current_user.accounts.find(params[:account_id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = "Conta não encontrada ou você não tem permissão para acessá-la."
+      redirect_to accounts_path
+      false
+    end
+  end
+end
+
+
+
+
+  def set_transaction
+    if @account
+      @transaction = @account.transactions.find(params[:id])
     else
-                 @transaction&.account || current_user.accounts.first
+      @transaction = current_user.transactions.find(params[:id])
     end
   end
 
-  def set_transaction
-    @transaction = current_user.transactions.find(params[:id])
-  end
-
   def transaction_params
-    params.require(:transaction).permit(:amount, :description, :date, :transaction_type, :category_id)
+    params.require(:transaction).permit(
+      :amount, :description, :date, :transaction_type, :category_id
+    )
   end
 end
