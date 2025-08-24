@@ -1,2 +1,41 @@
 <%= turbo_stream.prepend "categories", @category %>
 <%= turbo_stream.replace "category_form", partial: "form", locals: { category: current_user.categories.new } %>
+<!-- app/views/categories/create.turbo_stream.erb -->
+<%= turbo_stream.append "categories-list" do %>
+  <div class="list-group-item d-flex justify-content-between align-items-center" id="category_<%= @category.id %>">
+    <div class="flex-grow-1">
+      <strong><%= @category.name %></strong>
+      <% if @category.budget_amount > 0 %>
+        <br>
+        <small class="text-muted">
+          Orçamento: <%= number_to_currency(@category.budget_amount) %>
+        </small>
+      <% end %>
+    </div>
+    <div class="btn-group">
+      <%= button_to category_path(@category), 
+                    method: :delete, 
+                    class: "btn btn-sm btn-outline-danger",
+                    form: { 
+                      data: { 
+                        turbo_confirm: "Tem certeza que deseja excluir a categoria '#{@category.name}'?",
+                        turbo: true 
+                      } 
+                    },
+                    title: "Excluir categoria" do %>
+        <i class="fas fa-trash"></i>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%= turbo_stream.update "new_category_form" do %>
+  <!-- Limpa o formulário -->
+<% end %>
+
+<%= turbo_stream.update "flash" do %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    Categoria criada com sucesso!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>

@@ -23,18 +23,27 @@ class TransactionsController < ApplicationController
     )
   end
 
-  def create
-    @transaction = @account.transactions.new(transaction_params)
+def create
+  @transaction = @account.transactions.new(transaction_params)
 
-    respond_to do |format|
-      if @transaction.save
-        format.html { redirect_to account_path(@account), notice: "Transação criada com sucesso." }
-        format.turbo_stream
-      else
-        format.html { render :new, status: :unprocessable_entity }
-      end
+  # Validação adicional para orçamento da categoria
+  if @transaction.category&.budget_amount.present? && @transaction.category.budget_amount > 0
+    current_spent = @transaction.category.spent_amount
+    if current_spent + @transaction.amount > @transaction.category.budget_amount
+      flash[:alert] = "Este gasto excede o orçamento definido para a categoria '#{@transaction.category.name}'"
+      render :new and return
     end
   end
+
+  respond_to do |format|
+    if @transaction.save
+      format.html { redirect_to account_path(@account), notice: "Transação criada com sucesso." }
+      format.turbo_stream
+    else
+      format.html { render :new, status: :unprocessable_entity }
+    end
+  end
+end
 
   def edit
   end

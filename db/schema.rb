@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_17_023034) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_24_192401) do
   create_table "accounts", force: :cascade do |t|
     t.string "name"
     t.decimal "limit"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_17_023034) do
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "budget_amount"
     t.index ["user_id"], name: "index_categories_on_user_id"
   end
 

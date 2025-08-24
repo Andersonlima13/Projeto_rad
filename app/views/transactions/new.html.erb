@@ -1,6 +1,7 @@
 <!-- app/views/transactions/new.html.erb -->
 <div class="container">
-  <div class="row justify-content-center">
+  <div class="row">
+    <!-- Coluna principal - Formulário de Transação -->
     <div class="col-md-8">
       <!-- Breadcrumb -->
       <nav aria-label="breadcrumb" class="mb-4">
@@ -76,14 +77,18 @@
             </div>
 
             <div class="form-group mb-4">
-              <%= form.label :category_id, "Categoria (Opcional)" %>
-              <%= form.collection_select :category_id, 
-                                        current_user.categories.order(:name), 
-                                        :id, :name, 
-                                        { include_blank: "Selecione uma categoria..." }, 
-                                        class: "form-control" %>
+              <%= form.label :category_id, "Categoria" %>
+              <div class="input-group">
+                <%= form.collection_select :category_id, 
+                                          current_user.categories.order(:name), 
+                                          :id, :name, 
+                                          { include_blank: "Selecione uma categoria..." }, 
+                                          class: "form-control",
+                                          id: "transaction_category_id" %>
+               
+              </div>
               <small class="form-text text-muted">
-                Ajude a organizar seus gastos por categoria
+                Selecione uma categoria ou crie uma nova para organizar seus gastos
               </small>
             </div>
 
@@ -103,9 +108,127 @@
         </div>
       </div>
     </div>
+
+    <!-- Coluna lateral - Informações e Categorias Existentes -->
+    <div class="col-md-4">
+      <!-- Informações da Conta -->
+      <div class="card">
+        <div class="card-header bg-secondary text-white">
+          <h6 class="card-title mb-0">Informações da Conta</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-2">
+            <strong>Conta:</strong> <%= @account.name %>
+          </div>
+          <div class="mb-2">
+            <strong>Limite:</strong> <%= number_to_currency(@account.limit) %>
+          </div>
+          <div class="mb-2">
+            <strong>Saldo disponível:</strong> 
+            <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+              <%= number_to_currency(@account.current_balance) %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categorias Existentes -->
+   <!-- Categorias Existentes -->
+<div class="card mt-4">
+  <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+    <h6 class="card-title mb-0">Suas Categorias</h6>
+    <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+      <i class="fas fa-plus"></i> Nova
+    </button>
+  </div>
+  <div class="card-body">
+    <div id="categories-list">
+      <% if current_user.categories.any? %>
+        <div class="list-group">
+          <% current_user.categories.order(:name).each do |category| %>
+            <div class="list-group-item d-flex justify-content-between align-items-center" id="category_<%= category.id %>">
+              <div class="flex-grow-1">
+                <strong><%= category.name %></strong>
+                <% if category.budget_amount > 0 %>
+                  <br>
+                  <small class="text-muted">
+                    Orçamento: <%= number_to_currency(category.budget_amount) %>
+                    <% if category.spent_amount > 0 %>
+                      | Gasto: <%= number_to_currency(category.spent_amount) %>
+                    <% end %>
+                  </small>
+                <% end %>
+              </div>
+              <div class="btn-group">
+                <%= button_to category_path(category), 
+                              method: :delete, 
+                              class: "btn btn-sm btn-outline-danger",
+                              form: { 
+                                data: { 
+                                  turbo_confirm: "Tem certeza que deseja excluir a categoria '#{category.name}'?",
+                                  turbo: true 
+                                } 
+                              },
+                              title: "Excluir categoria" do %>
+                  <i class="fas fa-trash"></i>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center text-muted py-3">
+          <i class="fas fa-tags fa-2x mb-2"></i>
+          <p>Nenhuma categoria criada</p>
+          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+            <i class="fas fa-plus"></i> Criar Primeira Categoria
+          </button>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
 
+
+
+
+<!-- Modal para Nova Categoria -->
+<div class="modal fade" id="newCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nova Categoria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= form_with(model: [current_user, Category.new], 
+                   url: categories_path(account_id: @account.id), 
+                   data: { turbo_frame: "_top" }) do |form| %>
+        <div class="modal-body" id="new_category_form">
+          <div class="form-group mb-3">
+            <%= form.label :name, "Nome da Categoria *", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control", required: true, 
+                                placeholder: "Ex: Alimentação, Transporte, Lazer..." %>
+          </div>
+          
+          <div class="form-group mb-3">
+            <%= form.label :budget_amount, "Valor do Orçamento (Opcional)", class: "form-label" %>
+            <%= form.number_field :budget_amount, step: 0.01, class: "form-control", 
+                                 min: 0, placeholder: "0,00" %>
+            <small class="form-text text-muted">
+              Valor máximo: <%= number_to_currency(@account.current_balance) %>
+            </small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <%= form.submit "Criar Categoria", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Remova o botão do grupo de input do select de categorias -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Validação do valor em relação ao saldo disponível
@@ -120,6 +243,54 @@ document.addEventListener('DOMContentLoaded', function() {
       if (amount > balance) {
         alert('Atenção: Este valor excede o saldo disponível da conta!');
         this.focus();
+      }
+    });
+  }
+
+  // Validação do orçamento no modal de categoria
+  const categoryBudgetField = document.getElementById('category_budget_amount');
+  if (categoryBudgetField) {
+    categoryBudgetField.addEventListener('blur', function() {
+      const budgetAmount = parseFloat(this.value) || 0;
+      const accountBalance = parseFloat('<%= @account.current_balance %>');
+      
+      if (budgetAmount > accountBalance) {
+        alert('Atenção: O valor do orçamento não pode exceder o saldo disponível da conta!');
+        this.value = accountBalance.toFixed(2);
+      }
+    });
+  }
+
+  // Atualizar a página quando uma nova categoria for criada
+  document.addEventListener('DOMContentLoaded', function() {
+  // Fechar modal automaticamente após criar categoria com sucesso
+  document.addEventListener('ajax:success', function(event) {
+    const [data, status, xhr] = event.detail;
+    if (xhr.responseURL.includes('/categories')) {
+      // Fecha o modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('newCategoryModal'));
+      if (modal) {
+        modal.hide();
+      }
+      
+      // Limpa o formulário
+      const form = document.querySelector('#newCategoryModal form');
+      if (form) {
+        form.reset();
+      }
+    }
+  });
+
+  // Validação do orçamento no modal de categoria
+  const categoryBudgetField = document.getElementById('category_budget_amount');
+  if (categoryBudgetField) {
+    categoryBudgetField.addEventListener('blur', function() {
+      const budgetAmount = parseFloat(this.value) || 0;
+      const accountBalance = parseFloat('<%= @account.current_balance %>');
+      
+      if (budgetAmount > accountBalance) {
+        alert('Atenção: O valor do orçamento não pode exceder o saldo disponível da conta!');
+        this.value = accountBalance.toFixed(2);
       }
     });
   }

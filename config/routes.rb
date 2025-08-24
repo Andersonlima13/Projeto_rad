@@ -19,11 +19,11 @@ Rails.application.routes.draw do
   get "transactions", to: "transactions#index", as: :all_transactions
 
   # Rotas para categorias
-  resources :categories, except: [ :show ] do
-    collection do
-      patch :sort # Para reordenação (opcional)
-    end
+  resources :categories, only: [ :create, :update, :destroy ]  do
+  collection do
+    get :budget_info
   end
+end
 
   # Rotas root condicionais
   authenticated :user do

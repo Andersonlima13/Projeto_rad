@@ -1,0 +1,8 @@
+<!-- app/views/categories/destroy.turbo_stream.erb -->
+<%= turbo_stream.remove "category_#{@category.id}" %>
+<%= turbo_stream.update "flash" do %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    Categoria excluída com sucesso!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
