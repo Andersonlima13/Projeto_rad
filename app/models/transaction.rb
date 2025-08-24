@@ -22,6 +22,7 @@ class Transaction < ActiveRecord::Base
             inclusion: { in: %w[income expense] }
 
   validate :account_and_category_belong_to_same_user
+  validate :validate_account_balance, if: -> { transaction_type == "expense" && amount.present? }
 
   scope :incomes, -> { where(transaction_type: "income") }
   scope :expenses, -> { where(transaction_type: "expense") }
@@ -33,6 +34,14 @@ class Transaction < ActiveRecord::Base
   def account_and_category_belong_to_same_user
     if category.present? && category.user != account.user
       errors.add(:category, "deve pertencer ao mesmo usuário da conta")
+    end
+  end
+
+  def validate_account_balance
+    return unless account && amount > 0
+
+    if amount > account.current_balance
+      errors.add(:amount, "excede o saldo disponível da conta. Saldo disponível: #{number_to_currency(account.current_balance)}")
     end
   end
 end

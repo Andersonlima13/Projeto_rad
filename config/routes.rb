@@ -5,22 +5,18 @@ Rails.application.routes.draw do
   }
 
   # Rotas para accounts (com transactions aninhadas)
-  resources :accounts do  # REMOVA except: [:show]
+  resources :accounts do
     collection do
       patch :sort # Para reordenação (opcional)
+      get :expenses_summary # Adicione esta linha se precisar
     end
-
-    resources :accounts do
-  resources :transactions
-end
-
-get "transactions", to: "transactions#index", as: :all_transactions
-
-
 
     # Rotas para transactions aninhadas em accounts
     resources :transactions
   end
+
+  # Rota adicional para todas as transações
+  get "transactions", to: "transactions#index", as: :all_transactions
 
   # Rotas para categorias
   resources :categories, except: [ :show ] do

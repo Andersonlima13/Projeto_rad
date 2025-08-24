@@ -1,0 +1,127 @@
+<!-- app/views/transactions/new.html.erb -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Contas", accounts_path %></li>
+          <li class="breadcrumb-item"><%= link_to @account.name, account_path(@account) %></li>
+          <li class="breadcrumb-item active">Novo Gasto</li>
+        </ol>
+      </nav>
+
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">
+              <i class="fas fa-plus-circle me-2"></i>Novo Gasto
+            </h4>
+            <small>Conta: <%= @account.name %></small>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <%= form_with(model: [@account, @transaction], local: true) do |form| %>
+            <% if @transaction.errors.any? %>
+              <div class="alert alert-danger">
+                <h5><%= pluralize(@transaction.errors.count, "erro") %> impediram este gasto de ser salvo:</h5>
+                <ul>
+                  <% @transaction.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <%= form.hidden_field :transaction_type, value: 'expense' %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <%= form.label :amount, "Valor do Gasto *" %>
+                  <%= form.number_field :amount, 
+                                        step: 0.01, 
+                                        class: "form-control", 
+                                        required: true, 
+                                        min: 0.01,
+                                        placeholder: "0,00" %>
+                  <small class="form-text text-muted">
+                    Saldo disponível: 
+                    <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+                      <%= number_to_currency(@account.current_balance) %>
+                    </span>
+                  </small>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group mb-3">
+                  <%= form.label :date, "Data do Gasto *" %>
+                  <%= form.date_field :date, 
+                                      class: "form-control", 
+                                      value: Date.current, 
+                                      required: true %>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <%= form.label :description, "Descrição do Gasto *" %>
+              <%= form.text_field :description, 
+                                  class: "form-control", 
+                                  required: true, 
+                                  maxlength: 100,
+                                  placeholder: "Ex: Supermercado, Restaurante, Combustível..." %>
+            </div>
+
+            <div class="form-group mb-4">
+              <%= form.label :category_id, "Categoria (Opcional)" %>
+              <%= form.collection_select :category_id, 
+                                        current_user.categories.order(:name), 
+                                        :id, :name, 
+                                        { include_blank: "Selecione uma categoria..." }, 
+                                        class: "form-control" %>
+              <small class="form-text text-muted">
+                Ajude a organizar seus gastos por categoria
+              </small>
+            </div>
+
+            <div class="form-group">
+              <%= form.submit "Adicionar Gasto", 
+                              class: "btn btn-primary btn-lg w-100",
+                              data: { disable_with: "Salvando..." } %>
+            </div>
+          <% end %>
+        </div>
+        
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-between">
+            <%= link_to "Voltar para a Conta", account_path(@account), class: "btn btn-secondary" %>
+            <%= link_to "Cancelar", account_transactions_path(@account), class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Validação do valor em relação ao saldo disponível
+  const amountField = document.getElementById('transaction_amount');
+  const balanceElement = document.querySelector('.form-text.text-muted span');
+  
+  if (amountField && balanceElement) {
+    amountField.addEventListener('blur', function() {
+      const amount = parseFloat(this.value);
+      const balance = parseFloat(balanceElement.textContent.replace('R$', '').replace('.', '').replace(',', '.'));
+      
+      if (amount > balance) {
+        alert('Atenção: Este valor excede o saldo disponível da conta!');
+        this.focus();
+      }
+    });
+  }
+});
+</script>

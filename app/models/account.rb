@@ -7,7 +7,9 @@ class Account < ActiveRecord::Base
   validates :limit, numericality: { greater_than_or_equal_to: 0 }
 
   def current_balance
-    total_income - total_expenses + limit
+  incomes = transactions.where(transaction_type: "income").sum(:amount)
+  expenses = transactions.where(transaction_type: "expense").sum(:amount)
+  limit - expenses + incomes
   end
 
   def transactions_count
