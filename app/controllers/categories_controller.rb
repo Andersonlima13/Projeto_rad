@@ -1,63 +1,39 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: [ :update, :destroy ]
+  # Apenas necessário se você criar categorias vinculadas a uma conta
+  # before_action :set_account, only: [:create]
 
-  def index
-    @categories = current_user.categories.order(:name)
-    @category = current_user.categories.new
-  end
+  def create
+    @category = current_user.categories.build(category_params)
 
-def create
-  @category = current_user.categories.new(category_params)
-
-  begin
-    if @category.save!
-      redirect_back fallback_location: new_account_transaction_path(account_id: params[:account_id]),
-                    notice: "Categoria criada com sucesso!"
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    flash[:alert] = e.record.errors.full_messages.to_sentence
-    redirect_back fallback_location: new_account_transaction_path(account_id: params[:account_id])
-  end
-end
-
-  def update
-    if @category.update(category_params)
-      redirect_to categories_path, notice: "Categoria atualizada!"
+    if @category.save
+      redirect_back fallback_location: new_account_transaction_path(params[:account_id]),
+                    notice: "Categoria criada com sucesso."
     else
-      render :edit
+      redirect_back fallback_location: new_account_transaction_path(params[:account_id]),
+                    alert: @category.errors.full_messages.to_sentence
     end
   end
+
 def destroy
   @category = current_user.categories.find(params[:id])
-  if @category.transactions.any?
-    redirect_back fallback_location: new_account_transaction_path(account_id: params[:account_id]),
-                  alert: "Não é possível excluir uma categoria que possui transações associadas."
-  else
-    @category.destroy
-    redirect_back fallback_location: new_account_transaction_path(account_id: params[:account_id]),
-                  notice: "Categoria excluída com sucesso."
+  @category.destroy
+
+  respond_to do |format|
+    format.html { redirect_back fallback_location: request.referrer || accounts_path, notice: "Categoria removida com sucesso." }
+    format.turbo_stream { render turbo_stream: turbo_stream.remove(@category) }
   end
 end
-
-
-  def budget_info
-    category = current_user.categories.find(params[:id])
-    render json: {
-      category_name: category.name,
-      budget_amount: category.budget_amount,
-      spent_amount: category.spent_amount,
-      remaining_budget: category.remaining_budget,
-      remaining_budget_formatted: number_to_currency(category.remaining_budget)
-    }
-  end
 
   private
 
-  def set_category
-    @category = current_user.categories.find(params[:id])
-  end
+  # set_account removido, já que categoria não depende de account
+  # def set_account
+  #   @account = current_user.accounts.find(params[:account_id])
+  # rescue ActiveRecord::RecordNotFound
+  #   redirect_back fallback_location: accounts_path, alert: "Conta não encontrada."
+  # end
 
   def category_params
-    params.require(:category).permit(:name, :position, :budget_amount, :account_id)
+    params.require(:category).permit(:name, :budget_amount)
   end
 end

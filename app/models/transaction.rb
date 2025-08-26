@@ -1,7 +1,9 @@
 # app/models/transaction.rb
 class Transaction < ActiveRecord::Base
+  belongs_to :user
   belongs_to :account
-  belongs_to :category, optional: true
+  belongs_to :category
+
 
   validates :amount,
             presence: true,
@@ -43,5 +45,12 @@ class Transaction < ActiveRecord::Base
     if amount > account.current_balance
       errors.add(:amount, "excede o saldo disponível da conta. Saldo disponível: #{number_to_currency(account.current_balance)}")
     end
+  end
+end
+
+
+def account_and_category_belong_to_same_user
+  if category.present? && category.user != account.user
+    errors.add(:category, "deve pertencer ao mesmo usuário da conta")
   end
 end

@@ -1,4 +1,3 @@
-# app/controllers/transactions_controller.rb
 class TransactionsController < ApplicationController
   before_action :set_account
   before_action :set_transaction, only: [ :show, :edit, :update, :destroy ]
@@ -7,7 +6,6 @@ class TransactionsController < ApplicationController
     if @account
       @transactions = @account.transactions.includes(:category).order(date: :desc, created_at: :desc)
     else
-      # Fallback para todas as transações do usuário
       @transactions = current_user.transactions.includes(:account, :category).order(date: :desc, created_at: :desc)
       flash.now[:alert] = "Conta não especificada. Mostrando todas as transações."
     end
@@ -24,24 +22,24 @@ class TransactionsController < ApplicationController
   end
 
 def create
-  @transaction = @account.transactions.new(transaction_params)
+  @transaction = @account.transactions.build(transaction_params)
+  @transaction.user = current_user
 
-  # Validação adicional para orçamento da categoria
-  if @transaction.category&.budget_amount.present? && @transaction.category.budget_amount > 0
-    current_spent = @transaction.category.spent_amount
-    if current_spent + @transaction.amount > @transaction.category.budget_amount
-      flash[:alert] = "Este gasto excede o orçamento definido para a categoria '#{@transaction.category.name}'"
-      render :new and return
-    end
-  end
+  begin
+    ActiveRecord::Base.transaction do
+      if @transaction.save
+        # Decrementa o orçamento da categoria
+        @transaction.category.decrement_budget!(@transaction.amount) if @transaction.category.present?
 
-  respond_to do |format|
-    if @transaction.save
-      format.html { redirect_to account_path(@account), notice: "Transação criada com sucesso." }
-      format.turbo_stream
-    else
-      format.html { render :new, status: :unprocessable_entity }
+        redirect_to new_account_transaction_path(@account), notice: "Gasto adicionado com sucesso!"
+      else
+        flash[:alert] = @transaction.errors.full_messages.to_sentence
+        render :new, status: :unprocessable_entity
+      end
     end
+  rescue StandardError => e
+    flash[:alert] = e.message
+    render :new, status: :unprocessable_entity
   end
 end
 
@@ -63,21 +61,17 @@ end
 
   private
 
-
-def set_account
-  if params[:account_id].present?
-    begin
-      @account = current_user.accounts.find(params[:account_id])
-    rescue ActiveRecord::RecordNotFound
-      flash[:alert] = "Conta não encontrada ou você não tem permissão para acessá-la."
-      redirect_to accounts_path
-      false
+  def set_account
+    if params[:account_id].present?
+      begin
+        @account = current_user.accounts.find(params[:account_id])
+      rescue ActiveRecord::RecordNotFound
+        flash[:alert] = "Conta não encontrada ou você não tem permissão para acessá-la."
+        redirect_to accounts_path
+        false
+      end
     end
   end
-end
-
-
-
 
   def set_transaction
     if @account
@@ -88,8 +82,6 @@ end
   end
 
   def transaction_params
-    params.require(:transaction).permit(
-      :amount, :description, :date, :transaction_type, :category_id
-    )
+    params.require(:transaction).permit(:amount, :description, :date, :transaction_type, :category_id)
   end
 end
