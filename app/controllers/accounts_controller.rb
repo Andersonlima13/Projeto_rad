@@ -59,6 +59,23 @@ def update
 end
 
 
+
+def recent_transactions
+  @recent_transactions = current_user.transactions
+                                    .order(created_at: :desc)
+                                    .page(params[:page])
+                                    .per(8) # 8 por página
+end
+
+
+def all_accounts
+  @accounts = current_user.accounts.order(created_at: :desc)
+  render :all_accounts
+end
+
+
+
+
 def destroy
   @account = current_user.accounts.find(params[:id])
   @account.destroy

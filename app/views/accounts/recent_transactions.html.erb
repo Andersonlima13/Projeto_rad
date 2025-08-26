@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-history me-2"></i> Gastos Recentes</h1>
+    <%= link_to "Voltar", accounts_path, class: "btn btn-secondary" %>
+  </div>
+
+  <div class="card">
+    <div class="card-header bg-success text-white">
+      <h5 class="card-title mb-0">Últimos Gastos</h5>
+    </div>
+    <div class="card-body">
+      <% if @recent_transactions.any? %>
+        <div class="list-group mb-3">
+          <% @recent_transactions.each do |transaction| %>
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="mb-1"><%= transaction.description %></h6>
+                <small class="text-muted"><%= l(transaction.date, format: :short) %></small>
+              </div>
+              <span class="<%= transaction.transaction_type == 'income' ? 'text-success' : 'text-danger' %> fw-bold" style="letter-spacing: 1.2px;">
+                <%= number_to_currency(transaction.amount) %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Paginação -->
+ <div class="d-flex justify-content-center mt-4">
+  <%= paginate @recent_transactions, pagination_class: "pagination-lg gap-3" %>
+</div>
+      <% else %>
+        <p class="text-muted text-center">Nenhuma transação recente</p>
+      <% end %>
+    </div>
+  </div>
+</div>

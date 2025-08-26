@@ -4,17 +4,6 @@
 
 
 
-  <!-- DEBUG: Remova depois -->
-  <div class="alert alert-info">
-    <strong>DEBUG:</strong><br>
-    Account ID: <%= params[:account_id] %><br>
-    @account: <%= @account&.inspect %><br>
-    Transactions count: <%= @transactions.count %>
-  </div>
-  <!-- Fim do DEBUG -->
-
-
-
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <% if @account %>
@@ -32,8 +21,7 @@
     </div>
     <div>
       <% if @account %>
-        <%= link_to "Nova Receita", new_account_transaction_path(@account, type: 'income'), 
-                    class: "btn btn-success me-2" %>
+
         <%= link_to "Nova Despesa", new_account_transaction_path(@account, type: 'expense'), 
                     class: "btn btn-danger me-2" %>
         <%= link_to "Voltar para Conta", account_path(@account), class: "btn btn-secondary" %>

@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   # Rotas para accounts (com transactions aninhadas)
   resources :accounts do
     collection do
-      patch :sort # Para reordenação (opcional)
-      get :expenses_summary # Adicione esta linha se precisar
+      get :recent_transactions
+      get :all_accounts # nova rota
     end
 
     # Rotas para transactions aninhadas em accounts
