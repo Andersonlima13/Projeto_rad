@@ -1,8 +1,7 @@
-<!-- app/views/transactions/new.html.erb -->
-<div class="container">
-  <div class="row">
+<div class="container my-5">
+  <div class="row g-4">
     <!-- Coluna principal - Formulário de Transação -->
-    <div class="col-md-8">
+    <div class="col-lg-8">
       <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><%= link_to "Contas", accounts_path %></li>
@@ -11,7 +10,7 @@
         </ol>
       </nav>
 
-      <div class="card">
+      <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <div class="d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">
@@ -37,164 +36,148 @@
             <%= form.hidden_field :transaction_type, value: 'expense' %>
 
             <div class="row">
-              <div class="col-md-6">
-                <div class="form-group mb-3">
-                  <%= form.label :amount, "Valor do Gasto *" %>
-                  <%= form.number_field :amount, step: 0.01, class: "form-control", required: true, min: 0.01, placeholder: "0,00" %>
-                  <small class="form-text text-muted">
-                    Saldo disponível: 
-                    <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
-                      <%= number_to_currency(@account.current_balance) %>
-                    </span>
-                  </small>
-                </div>
+              <div class="col-md-6 mb-3">
+                <%= form.label :amount, "Valor do Gasto *" %>
+                <%= form.number_field :amount, step: 0.01, class: "form-control", required: true, min: 0.01, placeholder: "0,00" %>
+                <small class="form-text text-muted">
+                  Saldo disponível: 
+                  <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+                    <%= number_to_currency(@account.current_balance) %>
+                  </span>
+                </small>
               </div>
 
-              <div class="col-md-6">
-                <div class="form-group mb-3">
-                  <%= form.label :date, "Data do Gasto *" %>
-                  <%= form.date_field :date, class: "form-control", value: Date.current, required: true %>
-                </div>
+              <div class="col-md-6 mb-3">
+                <%= form.label :date, "Data do Gasto *" %>
+                <%= form.date_field :date, class: "form-control", value: Date.current, required: true %>
               </div>
             </div>
 
-            <div class="form-group mb-3">
+            <div class="mb-3">
               <%= form.label :description, "Descrição do Gasto *" %>
               <%= form.text_field :description, class: "form-control", required: true, maxlength: 100, placeholder: "Ex: Supermercado, Restaurante, Combustível..." %>
             </div>
 
-            <div class="form-group mb-4">
+            <div class="mb-3">
               <%= form.label :category_id, "Categoria" %>
-              <div class="input-group">
-                <%= form.collection_select :category_id,
-                                           current_user.categories.includes(:transactions).order(:name),
-                                           :id, :name,
-                                           { include_blank: "Selecione uma categoria..." },
-                                           class: "form-control",
-                                           id: "transaction_category_id" %>
-              </div>
+              <%= form.collection_select :category_id,
+                                         current_user.categories.includes(:transactions).order(:name),
+                                         :id, :name,
+                                         { include_blank: "Selecione uma categoria..." },
+                                         class: "form-control",
+                                         id: "transaction_category_id" %>
               <small class="form-text text-muted">
                 Selecione uma categoria ou crie uma nova para organizar seus gastos
               </small>
             </div>
 
-            <div class="form-group">
-              <%= form.submit "Adicionar Gasto", class: "btn btn-primary btn-lg w-100", data: { disable_with: "Salvando..." } %>
-            </div>
+            <%= form.submit "Adicionar Gasto", class: "btn btn-primary btn-lg w-100", data: { disable_with: "Salvando..." } %>
           <% end %>
         </div>
 
-        <div class="card-footer bg-light">
-          <div class="d-flex justify-content-between">
-            <%= link_to "Voltar para a Conta", account_path(@account), class: "btn btn-secondary" %>
-            <%= link_to "Cancelar", account_transactions_path(@account), class: "btn btn-outline-secondary" %>
-          </div>
+        <div class="card-footer bg-light d-flex justify-content-between">
+          <%= link_to "Voltar para a Conta", account_path(@account), class: "btn btn-secondary" %>
+          <%= link_to "Cancelar", account_transactions_path(@account), class: "btn btn-outline-secondary" %>
         </div>
       </div>
     </div>
 
-    <!-- Coluna lateral - Informações e Categorias Existentes -->
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header bg-secondary text-white">
+    <!-- Coluna lateral - Informações da Conta e Categorias -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-danger text-white">
           <h6 class="card-title mb-0">Informações da Conta</h6>
         </div>
         <div class="card-body">
-          <div class="mb-2"><strong>Conta:</strong> <%= @account.name %></div>
-          <div class="mb-2"><strong>Limite:</strong> <%= number_to_currency(@account.limit) %></div>
-          <div class="mb-2">
-            <strong>Saldo disponível:</strong> 
+          <p><strong>Conta:</strong> <%= @account.name %></p>
+          <p><strong>Limite:</strong> <%= number_to_currency(@account.limit) %></p>
+          <p><strong>Saldo disponível:</strong> 
             <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
               <%= number_to_currency(@account.current_balance) %>
             </span>
-          </div>
+          </p>
         </div>
       </div>
 
-      <!-- Categorias Existentes -->
-      <div class="card mt-4">
-        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h6 class="card-title mb-0">Suas Categorias</h6>
           <button type="button" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
             <i class="fas fa-plus"></i> Nova
           </button>
         </div>
         <div class="card-body">
-
-
-
-<div id="categories-list">
-  <turbo-frame id="categories">
-    <% categories = current_user.categories.includes(:transactions).order(:name) %>
-    <% if categories.any? %>
-      <div class="list-group">
-        <% categories.each do |category| %>
-          <div class="list-group-item d-flex justify-content-between align-items-center" id="category_<%= category.id %>">
-            <div class="flex-grow-1">
-              <strong><%= category.name %></strong>
-              <% if category.budget_amount > 0 %>
-                <br>
-                <small class="text-muted">
-                  Orçamento: <%= number_to_currency(category.budget_amount) %>
-                  <% if category.spent_amount > 0 %>
-                    | Gasto: <%= number_to_currency(category.spent_amount) %>
+          <div id="categories-list">
+            <turbo-frame id="categories">
+              <% categories = current_user.categories.includes(:transactions).order(:name) %>
+              <% if categories.any? %>
+                <div class="list-group">
+                  <% categories.each do |category| %>
+                    <div class="list-group-item d-flex justify-content-between align-items-center" id="category_<%= category.id %>">
+                      <div class="flex-grow-1">
+                        <strong><%= category.name %></strong>
+                        <% if category.budget_amount > 0 %>
+                          <br>
+                          <small class="text-muted">
+                            Orçamento: <%= number_to_currency(category.budget_amount) %>
+                            <% if category.spent_amount > 0 %>
+                              | Gasto: <%= number_to_currency(category.spent_amount) %>
+                            <% end %>
+                          </small>
+                        <% end %>
+                      </div>
+                      <div class="btn-group">
+                        <%= button_to category_path(category), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Tem certeza que deseja excluir a categoria '#{category.name}'?" } } do %>
+                          <i class="fas fa-trash"></i>
+                        <% end %>
+                      </div>
+                    </div>
                   <% end %>
-                </small>
-              <% end %>
-            </div>
-            <div class="btn-group">
-              <%= button_to category_path(category), method: :delete, class: "btn btn-sm btn-outline-danger", form: { data: { turbo_confirm: "Tem certeza que deseja excluir a categoria '#{category.name}'?" } } do %>
-                <i class="fas fa-trash"></i>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% else %>
-      <div class="text-center text-muted py-3">
-        <i class="fas fa-tags fa-2x mb-2"></i>
-        <p>Nenhuma categoria criada</p>
-        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
-          <i class="fas fa-plus"></i> Criar Primeira Categoria
-        </button>
-      </div>
-    <% end %>
-  </turbo-frame>
-</div>
-
-
-
-      <!-- Modal Nova Categoria (sem alteração) -->
-      <div class="modal fade" id="newCategoryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Nova Categoria</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <%= form_with(model: [current_user, Category.new], url: categories_path(account_id: @account.id), data: { turbo_frame: "_top" }) do |form| %>
-              <div class="modal-body" id="new_category_form">
-                <div class="form-group mb-3">
-                  <%= form.label :name, "Nome da Categoria *", class: "form-label" %>
-                  <%= form.text_field :name, class: "form-control", required: true, placeholder: "Ex: Alimentação, Transporte, Lazer..." %>
                 </div>
-
-                <div class="form-group mb-3">
-                  <%= form.label :budget_amount, "Valor do Orçamento (Opcional)", class: "form-label" %>
-                  <%= form.number_field :budget_amount, step: 0.01, class: "form-control", min: 0, placeholder: "0,00" %>
-                  <small class="form-text text-muted">
-                    Valor máximo: <%= number_to_currency(@account.current_balance) %>
-                  </small>
+              <% else %>
+                <div class="text-center text-muted py-3">
+                  <i class="fas fa-tags fa-2x mb-2"></i>
+                  <p>Nenhuma categoria criada</p>
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+                    <i class="fas fa-plus"></i> Criar Primeira Categoria
+                  </button>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <%= form.submit "Criar Categoria", class: "btn btn-primary" %>
-              </div>
-            <% end %>
+              <% end %>
+            </turbo-frame>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Categoria -->
+<div class="modal fade" id="newCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nova Categoria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <%= form_with(model: [current_user, Category.new], url: categories_path(account_id: @account.id), data: { turbo_frame: "_top" }) do |form| %>
+        <div class="modal-body" id="new_category_form">
+          <div class="mb-3">
+            <%= form.label :name, "Nome da Categoria *", class: "form-label" %>
+            <%= form.text_field :name, class: "form-control", required: true, placeholder: "Ex: Alimentação, Transporte, Lazer..." %>
+          </div>
+          <div class="mb-3">
+            <%= form.label :budget_amount, "Valor do Orçamento (Opcional)", class: "form-label" %>
+            <%= form.number_field :budget_amount, step: 0.01, class: "form-control", min: 0, placeholder: "0,00" %>
+            <small class="form-text text-muted">
+              Valor máximo: <%= number_to_currency(@account.current_balance) %>
+            </small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <%= form.submit "Criar Categoria", class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

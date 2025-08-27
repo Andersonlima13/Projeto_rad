@@ -82,10 +82,10 @@
 
 <div class="row mt-4">
   <div class="col-12">
-    <div class="card bg-info text-white">
+    <div class="card bg-primary text-white">
       <div class="card-body text-center">
-        <h5 class="card-title">Saldo Disponível</h5>
-        <h2 class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+        <h5 class="card-title text-white">Saldo Disponível</h5>
+        <h2 class="<%= @account.current_balance >= 0 ? 'text-white' : 'text-white' %>">
           <%= number_to_currency(@account.current_balance) %>
         </h2>
       </div>
@@ -100,7 +100,7 @@
               <div class="d-grid gap-2 d-md-flex">
                 <%= link_to "Nova Transação", new_account_transaction_path(@account), 
                             class: "btn btn-primary me-md-2" %>
-               <%= link_to "Ver Transações", account_transactions_path(@account), class: "btn btn-info me-2" %>
+               <%= link_to "Ver Transações", account_transactions_path(@account), class: "btn btn-success me-2" %>
 
                 <%= link_to "Editar Conta", edit_account_path(@account), 
                             class: "btn btn-outline-secondary me-md-2" %>

@@ -1,5 +1,7 @@
 # app/controllers/accounts_controller.rb
 class AccountsController < ApplicationController
+  load_and_authorize_resource
+
   before_action :set_account, only: [ :edit, :update, :destroy ]
 
   def index

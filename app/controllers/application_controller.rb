@@ -1,5 +1,10 @@
 # app/controllers/application_controller.rb
 class ApplicationController < ActionController::Base
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_path, alert: "Você não tem permissão para acessar esta página."
+  end
+
+
   before_action :authenticate_user!
 
   protected

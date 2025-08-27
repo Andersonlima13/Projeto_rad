@@ -1,37 +1,50 @@
 <!-- app/views/accounts/index.html.erb -->
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Bem vindo, <%= current_user.name %></h1>
-    <%= link_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+<div class="container-fluid p-0">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="#"><i class="fas fa-dollar-sign me-2"></i>Gestor Financeiro</a>
+    <div class="ms-auto">
+      <%= link_to "Sair", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+    </div>
+  </nav>
+
+  <!-- Introdução -->
+  <div class="container my-5 text-center">
+    <h1>Bem-vindo, <%= current_user.name %>!</h1>
+    <p class="lead">Controle seus gastos em um só lugar</p>
   </div>
 
-  <div class="row">
-    <div class="col-md-8">
-      <!-- Seção de Gastos Atuais -->
-      <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="card-title mb-0"><i class="fas fa-chart-pie me-2"></i>Gastos Atuais</h5>
-        </div>
-        <div class="card-body">
-          <p class="text-muted">Resumo de gastos por conta virá aqui</p>
+  <!-- Cards principais -->
+  <div class="container">
+    <div class="row justify-content-center g-4">
+      <!-- Ver Gastos Recentes -->
+      <div class="col-md-4">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title mb-3"><i class="fas fa-history me-2"></i>Ver Gastos Recentes</h5>
+            <p class="card-text text-muted mb-4">Visualize suas últimas transações e controle seu orçamento</p>
+            <%= link_to "Acessar", recent_transactions_accounts_path, class: "btn btn-success btn-lg" %>
+          </div>
         </div>
       </div>
 
-      <!-- Botão para Gastos Recentes -->
-      <div class="text-center">
-        <%= link_to "Ver Gastos Recentes", recent_transactions_accounts_path,
-                    class: "btn btn-success btn-lg" %>
+      <!-- Acessar Contas -->
+      <div class="col-md-4">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title mb-3"><i class="fas fa-credit-card me-2"></i>Acessar Contas</h5>
+            <p class="card-text text-muted mb-4">Gerencie todas as suas contas cadastradas</p>
+<%= link_to "Acessar", all_accounts_accounts_path, class: "btn btn-primary btn-lg" %>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- Botão para Ver Contas -->
-<div class="text-center my-4">
-  <%= link_to "Ver Contas", all_accounts_accounts_path,
-              class: "btn btn-primary btn-lg" %>
-</div>
-
-
-
-  
   </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3 mt-5">
+    &copy; <%= Time.current.year %> Gestor Financeiro. Todos os direitos reservados.
+  </footer>
+
 </div>
