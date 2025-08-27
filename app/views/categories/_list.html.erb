@@ -1,0 +1,15 @@
+<% if categories.any? %>
+  <div class="list-group">
+    <% categories.each do |category| %>
+      <%= render partial: "categories/category", locals: { category: category } %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center text-muted py-3">
+    <i class="fas fa-tags fa-2x mb-2"></i>
+    <p>Nenhuma categoria criada</p>
+    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCategoryModal">
+      <i class="fas fa-plus"></i> Criar Primeira Categoria
+    </button>
+  </div>
+<% end %>

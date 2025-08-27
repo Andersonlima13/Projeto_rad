@@ -1,14 +1,12 @@
-<%= form_with(model: category, 
-              data: { controller: "reset-form", action: "turbo:submit-end->reset-form#reset" }) do |form| %>
-  <div class="row g-3 align-items-center mb-4">
-    <div class="col-auto">
-      <%= form.label :name, "Nova Categoria", class: "col-form-label" %>
-    </div>
-    <div class="col-auto">
-      <%= form.text_field :name, class: "form-control", required: true %>
-    </div>
-    <div class="col-auto">
-      <%= form.submit "Salvar", class: "btn btn-primary" %>
-    </div>
-  </div>
-<% end %>
+<div class="mb-3">
+  <%= form.label :name, "Nome da Categoria *", class: "form-label" %>
+  <%= form.text_field :name, class: "form-control", required: true, placeholder: "Ex: Alimentação, Transporte, Lazer..." %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :budget_amount, "Valor do Orçamento (Opcional)", class: "form-label" %>
+  <%= form.number_field :budget_amount, step: 0.01, class: "form-control", min: 0, placeholder: "0,00" %>
+  <small class="form-text text-muted">
+    Valor máximo: <%= number_to_currency(@account.current_balance) %>
+  </small>
+</div>

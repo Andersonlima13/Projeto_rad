@@ -1,18 +1,20 @@
 class CategoriesController < ApplicationController
-  # Apenas necessário se você criar categorias vinculadas a uma conta
-  # before_action :set_account, only: [:create]
+# Apenas necessário se você criar categorias vinculadas a uma conta
+# before_action :set_account, only: [:create]
 
-  def create
-    @category = current_user.categories.build(category_params)
+def create
+  @category = current_user.categories.build(category_params)
 
+  respond_to do |format|
     if @category.save
-      redirect_back fallback_location: new_account_transaction_path(params[:account_id]),
-                    notice: "Categoria criada com sucesso."
+      format.turbo_stream
+      format.html { redirect_back fallback_location: new_account_transaction_path(params[:account_id]), notice: "Categoria criada com sucesso." }
     else
-      redirect_back fallback_location: new_account_transaction_path(params[:account_id]),
-                    alert: @category.errors.full_messages.to_sentence
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("new_category_form", partial: "categories/form", locals: { category: @category }) }
+      format.html { redirect_back fallback_location: new_account_transaction_path(params[:account_id]), alert: @category.errors.full_messages.to_sentence }
     end
   end
+end
 
 def destroy
   @category = current_user.categories.find(params[:id])
