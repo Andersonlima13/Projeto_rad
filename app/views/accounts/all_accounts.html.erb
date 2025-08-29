@@ -1,30 +1,52 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Suas Contas</h1>
-    <%= link_to "Voltar", accounts_path, class: "btn btn-secondary" %>
+<!-- app/views/accounts/index.html.erb -->
+
+<div class="container-fluid p-0">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand" href="#"><i class="fas fa-dollar-sign me-2"></i>Gestor Financeiro</a>
+    <div class="ms-auto">
+      <%= link_to "Início", authenticated_root_path, class: "btn btn-outline-light me-2" %>
+      <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-danger" %>
+    </div>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Suas Contas</h1>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-credit-card me-2"></i>Contas do Usuário
+        </h5>
+        <%= link_to "Nova Conta", new_account_path, class: "btn btn-light btn-sm", data: { turbo_frame: "modal" } %>
+      </div>
+      <div class="card-body">
+        <turbo-frame id="accounts">
+          <div class="row">
+            <% if @accounts.any? %>
+              <%= render @accounts %>
+            <% else %>
+              <div class="col-12">
+                <div class="text-center text-muted py-4">
+                  <i class="fas fa-wallet fa-3x mb-3"></i>
+                  <p>Nenhuma conta cadastrada</p>
+                  <%= link_to "Criar Primeira Conta", new_account_path, class: "btn btn-primary" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </turbo-frame>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-      <h5 class="card-title mb-0"><i class="fas fa-credit-card me-2"></i>Contas do Usuário</h5>
-      <%= link_to "Nova Conta", new_account_path, class: "btn btn-light btn-sm", data: { turbo_frame: "modal" } %>
+  <!-- Footer -->
+  <footer class="bg-dark text-light py-3 mt-5">
+    <div class="container text-center">
+      <small>&copy; <%= Time.current.year %> Gestor Financeiro. Todos os direitos reservados.</small>
     </div>
-    <div class="card-body">
-      <turbo-frame id="accounts">
-        <div class="row">
-          <% if @accounts.any? %>
-            <%= render @accounts %>
-          <% else %>
-            <div class="col-12">
-              <div class="text-center text-muted py-4">
-                <i class="fas fa-wallet fa-3x mb-3"></i>
-                <p>Nenhuma conta cadastrada</p>
-                <%= link_to "Criar Primeira Conta", new_account_path, class: "btn btn-primary" %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </turbo-frame>
-    </div>
-  </div>
+  </footer>
 </div>

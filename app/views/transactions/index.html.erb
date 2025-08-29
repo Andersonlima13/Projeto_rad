@@ -1,16 +1,12 @@
-<!-- app/views/transactions/index.html.erb -->
-<div class="container">
-
-
-
-
+<div class="container my-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <% if @account %>
         <h1>Transações da Conta: <%= @account.name %></h1>
         <p class="text-muted">
           Limite: <%= number_to_currency(@account.limit) %> | 
-          Saldo Disponível: <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
+          Saldo Disponível: 
+          <span class="<%= @account.current_balance >= 0 ? 'text-success' : 'text-danger' %>">
             <%= number_to_currency(@account.current_balance) %>
           </span>
         </p>
@@ -21,7 +17,6 @@
     </div>
     <div>
       <% if @account %>
-
         <%= link_to "Nova Despesa", new_account_transaction_path(@account, type: 'expense'), 
                     class: "btn btn-danger me-2" %>
         <%= link_to "Voltar para Conta", account_path(@account), class: "btn btn-secondary" %>
@@ -35,8 +30,8 @@
     <div class="alert alert-warning"><%= flash[:alert] %></div>
   <% end %>
 
-  <div class="card">
-    <div class="card-header">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
       <h5 class="card-title mb-0">
         <% if @account %>
           Histórico de Transações
@@ -48,8 +43,8 @@
     <div class="card-body">
       <% if @transactions.any? %>
         <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
+          <table class="table table-striped align-middle">
+            <thead class="table-light">
               <tr>
                 <th>Data</th>
                 <th>Descrição</th>
@@ -57,7 +52,7 @@
                 <th>Categoria</th>
                 <th>Tipo</th>
                 <th>Valor</th>
-                <th>Ações</th>
+                <th class="text-center">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -72,10 +67,10 @@
                       <%= transaction.transaction_type == 'income' ? 'Receita' : 'Despesa' %>
                     </span>
                   </td>
-                  <td class="<%= transaction.transaction_type == 'income' ? 'text-success' : 'text-danger' %>">
+                  <td class="fw-bold <%= transaction.transaction_type == 'income' ? 'text-success' : 'text-danger' %>">
                     <%= number_to_currency(transaction.amount) %>
                   </td>
-                  <td>
+                  <td class="text-center">
                     <%= link_to "Editar", edit_account_transaction_path(transaction.account, transaction), 
                                 class: "btn btn-sm btn-outline-secondary me-1" %>
                     <%= button_to "Excluir", account_transaction_path(transaction.account, transaction), 
@@ -88,10 +83,14 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Paginação -->
+        <div class="d-flex justify-content-center mt-4">
+          <%= paginate @transactions, theme: "bootstrap-5" %>
+        </div>
       <% else %>
         <p class="text-muted text-center">Nenhuma transação encontrada.</p>
       <% end %>
     </div>
   </div>
 </div>
-
